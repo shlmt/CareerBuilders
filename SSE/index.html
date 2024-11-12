@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>SSE Client</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>SSE Client - clock</h1>
+            <div id="messages">
+        </div>
+        <a href="health.html" class="link-button">Go to Server Health Monitor</a>
+    </div>
+</body>
+
+<script>
+    const eventSource = new EventSource('/clock')
+    const messagesDiv = document.getElementById('messages')
+
+    eventSource.onmessage = (event) => {
+        const newMessage = document.createElement('p')
+        newMessage.textContent = event.data;
+        messagesDiv.appendChild(newMessage);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight
+    }
+
+    eventSource.onerror = (error) => {
+        console.error("Error with SSE:", error);
+    }
+</script>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>SSE Client</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Server Health Monitor</h1>
+        <div id="monitor">
+            <p><strong>CPU Load:</strong> <span id="cpuLoad">Loading...</span></p>
+            <p><strong>Memory (MB):</strong> Used: <span id="usedMemory">Loading...</span> / Total: <span id="totalMemory">Loading...</span></p>
+            <p><strong>Uptime:</strong> <span id="uptime">Loading...</span></p>
+        </div>
+        <a href="index.html" class="link-button">Go to Server clock</a>
+    </div>
+</body>
+<script>
+    const eventSource = new EventSource('/events')
+    const messagesDiv = document.getElementById('messages')
+
+    eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        document.getElementById('cpuLoad').textContent = data.cpuLoad
+        document.getElementById('usedMemory').textContent = data.memory.used
+        document.getElementById('totalMemory').textContent = data.memory.total
+        document.getElementById('uptime').textContent = data.uptime
+    }
+
+    eventSource.onerror = (error) => {
+        console.error("Error with SSE:", error)
+    }
+</script>
+</html>
